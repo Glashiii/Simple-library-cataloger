@@ -18,6 +18,33 @@ public class Shelf {
         this.books = books;
     }
 
+    public IBook getBookByTitle(String title) throws Exception {
+            for (IBook book : books) {
+                if (book.getTitle().equals(title)) {
+                    return book;
+                }
+            }
+            throw new Exception("No such title");
+    }
+
+    public void deleteBookByTitle(String title) throws Exception {
+        for (IBook book : books) {
+            if (book.getTitle().equals(title)) {
+                books.remove(book);
+            }
+        }
+        throw new Exception("No such title");
+    }
+
+    public void addBook(IBook book) {
+        books.add(book);
+    }
+
+    public void removeBook(IBook book) {
+        books.remove(book);
+    }
+
+
 
     public List<IBook> getBooks() {
         return books;

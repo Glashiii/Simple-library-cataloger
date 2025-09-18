@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Book implements IBook {
     private String title;
     private String author;
+    private String content;
 
     public Book() {
     }
@@ -14,6 +15,12 @@ public class Book implements IBook {
     public Book(String title, String author) {
         this.title = title;
         this.author = author;
+    }
+
+    public Book(String title, String author, String content) {
+        this.title = title;
+        this.author = author;
+        this.content = content;
     }
 
     public void setTitle(String title) {
@@ -24,15 +31,26 @@ public class Book implements IBook {
         this.author = author;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     @Override
     public String getTitle() {
-        return "";
+        return title;
     }
 
     @Override
     public String getAuthor() {
-        return "";
+        return author;
     }
+
+    @Override
+    public String getContent() {
+        return content;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
