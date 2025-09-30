@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cabinet {
-    private Long id;
+    private int id;
     private String name;
     private int roomId;
 

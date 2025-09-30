@@ -20,4 +20,21 @@ public class ShelfDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteShelfById(Long id) {
+        String sql = "delete from shelf where id = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql))  {
+            preparedStatement.setLong(1, id);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to delete shelf");
+            }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
