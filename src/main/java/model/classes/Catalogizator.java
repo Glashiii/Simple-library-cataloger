@@ -1,4 +1,6 @@
-package classes;
+package model.classes;
+
+import model.pojo.Room;
 
 public class Catalogizator {
     private Room room;
