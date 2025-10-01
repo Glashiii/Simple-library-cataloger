@@ -5,6 +5,7 @@ import model.pojo.Shelf;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ShelfDAO {
@@ -21,7 +22,7 @@ public class ShelfDAO {
         }
     }
 
-    public void deleteShelfById(Long id) {
+    public void deleteShelfById(int id) {
         String sql = "delete from shelf where id = ?";
         try(Connection connection = Database.connect();
             PreparedStatement preparedStatement = connection.prepareStatement(sql))  {
@@ -37,4 +38,67 @@ public class ShelfDAO {
         }
     }
 
+    public Shelf findShelfById(int id) {
+        String sql = "select * from shelf where id = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                Shelf shelf = new Shelf(rs.getInt("id"), rs.getString("name"),
+                        rs.getInt("cabinet_id"));
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Shelf findShelfByName(String name) {
+        String sql = "select * from shelf where name = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return new Shelf(rs.getInt("id"), rs.getString("name"),
+                        rs.getInt("cabinet_id"));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String updateShelfByName(String name, String newName) {
+        String sql = "update shelf set name = ? where name = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, name);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to update shelf");
+            }
+            return newName;
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteShelfByName(String name) {
+        String sql = "delete from shelf where name = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, name);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to delete cabinet");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

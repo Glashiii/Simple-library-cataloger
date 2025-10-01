@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookDAO {
 
@@ -39,6 +41,7 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+
     public Book findBookById(int id) {
         String sql = "SELECT * FROM book WHERE id = ?";
         try (Connection conn = Database.connect();
@@ -79,7 +82,7 @@ public class BookDAO {
         return false;
     }
 
-    public String updateBookTitle(String title, String author, String newTitle) {
+    public String updateBookByAuthorAndTitle(String title, String author, String newTitle) {
         String sql = "UPDATE book SET title = ? WHERE title = ? and author = ?";
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -98,6 +101,60 @@ public class BookDAO {
 //            }
         }
         catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Book> findAllBooksByTitle(String title) {
+        String sql = "SELECT * FROM book WHERE title = ?";
+        try (Connection connection = Database.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, title);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                List<Book> books = new ArrayList<>();
+                while (rs.next()) {
+                    books.add(new Book());
+                }
+                return books;
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteBookByTitleAndAuthor(String title, String author) {
+        String sql = "DELETE FROM book WHERE title = ? AND author = ?";
+        try(Connection connection = Database.connect();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, author);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to delete book");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public Book findBookByTitleAndAuthor(String title, String author) {
+        String sql = "SELECT * FROM book WHERE title = ? AND author = ?";
+        try(Connection conn = Database.connect();
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, author);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    return new Book(rs.getInt("id"), rs.getInt("shelf_id"),
+                            rs.getString("title"), rs.getString("author"));
+                }
+            }
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

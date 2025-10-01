@@ -59,4 +59,53 @@ public class CabinetDAO {
             e.printStackTrace();
         }
     }
+
+    public String updateCabinetByName(String name, String newName) {
+        String sql = "UPDATE cabinet SET name = ? WHERE name = ?";
+        try(Connection connection = Database.connect();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, name);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to update cabinet");
+            }
+            return newName;
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteCabinetByName(String name) {
+        String sql = "DELETE FROM cabinet WHERE name = ?";
+        try(Connection connection = Database.connect();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, name);
+            int affected = preparedStatement.executeUpdate();
+            if (affected == 0) {
+                throw new RuntimeException("Failed to delete cabinet");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Cabinet findCabinetByName(String name) {
+        String sql = "SELECT * FROM cabinet WHERE name = ?";
+        try(Connection connection = Database.connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return new Cabinet(rs.getInt("id"),
+                        rs.getString("name"), rs.getInt("room_id"));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

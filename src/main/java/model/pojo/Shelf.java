@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Shelf {
-    private Long id;
+    private int id;
     private String name;
     private int cabinetId;
 
