@@ -33,6 +33,10 @@ public class BookService {
     }
 
     public void deleteBook(String title, String author) {
+        if(author == null || author.equals("")) {
+            System.out.println("Please enter author");
+            return;
+        }
         bookDAO.deleteBookByTitleAndAuthor(title, author);
     }
 
