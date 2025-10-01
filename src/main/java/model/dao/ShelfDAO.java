@@ -68,6 +68,7 @@ public class ShelfDAO {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public String updateShelfByName(String name, String newName) {
