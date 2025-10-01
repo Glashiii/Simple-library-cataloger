@@ -1,12 +1,12 @@
 package model.dao;
 
 import model.Database;
+import model.pojo.Book;
 import model.pojo.Shelf;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShelfDAO {
 
@@ -66,6 +66,26 @@ public class ShelfDAO {
                         rs.getInt("cabinet_id"));
             }
         }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Shelf> findAllShelvesByCabinetId(int cabinetId) {
+        String sql = "select * from shelf where cabinet_id = ?";
+        try (Connection connection = Database.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, cabinetId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                List<Shelf> shelves = new ArrayList<>();
+                while (rs.next()) {
+                    shelves.add(new Shelf(rs.getInt("id"), rs.getString("name"),
+                            rs.getInt("cabinet_id")));
+                }
+                return shelves;
+            }
+
+        } catch (SQLException e){
             e.printStackTrace();
         }
         return null;

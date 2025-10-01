@@ -2,11 +2,11 @@ package model.dao;
 
 import model.Database;
 import model.pojo.Cabinet;
+import model.pojo.Shelf;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CabinetDAO {
     public void addCabinet(Cabinet cabinet) {
@@ -104,6 +104,43 @@ public class CabinetDAO {
                         rs.getString("name"), rs.getInt("room_id"));
             }
         }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Cabinet> findAllCabinets() {
+        String sql = "SELECT * FROM cabinet";
+        try (Connection connection = Database.connect();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet rs = statement.executeQuery(sql)) {
+                List<Cabinet> cabinets = new ArrayList<>();
+                while (rs.next()) {
+                    cabinets.add(new Cabinet(rs.getInt("id"), rs.getString("name"),
+                            rs.getInt("room_id")));
+                }
+                return cabinets;
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<Cabinet> findAllCabinetsByRoomId(int roomId) {
+        String sql = "SELECT * FROM cabinet WHERE room_id = ?";
+        try (Connection connection = Database.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                List<Cabinet> cabinets = new ArrayList<>();
+                while (rs.next()) {
+                    cabinets.add(new Cabinet(rs.getInt("id"), rs.getString("name"),
+                            rs.getInt("room_id")));
+                }
+                return cabinets;
+            }
+
+        } catch (SQLException e){
             e.printStackTrace();
         }
         return null;

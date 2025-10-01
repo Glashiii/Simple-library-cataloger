@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Room {
-    private Long id;
+    private int id;
     private String name;
 
 

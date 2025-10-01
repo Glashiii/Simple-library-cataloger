@@ -19,7 +19,8 @@ public class DatabaseInitializator {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL UNIQUE,
                     room_id INTEGER NOT NULL,
-                    FOREIGN KEY (room_id) REFERENCES room(id)
+                    FOREIGN KEY (room_id) REFERENCES room(id),
+                    UNIQUE (name, room_id)
                 )""");
 
             stmt.executeUpdate("""
@@ -27,7 +28,8 @@ public class DatabaseInitializator {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     cabinet_id INTEGER NOT NULL,
-                    FOREIGN KEY (cabinet_id) REFERENCES cupboard(id)
+                    FOREIGN KEY (cabinet_id) REFERENCES cupboard(id),
+                    UNIQUE (name, cabinet_id)
                 )""");
 
             stmt.executeUpdate("""
