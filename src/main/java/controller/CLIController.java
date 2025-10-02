@@ -1,12 +1,11 @@
 package controller;
 
-import model.DTO.BookLocation;
+import exceptions.EntityNotFoundException;
+import model.dto.BookLocation;
 import org.apache.commons.cli.*;
 import service.BookService;
 import service.CabinetService;
 import service.ShelfService;
-
-import java.text.ParseException;
 
 public class CLIController {
     private final BookService bookService;
@@ -87,7 +86,6 @@ public class CLIController {
                         System.out.println("Found book: " + book.getBookTitle() + " (" + book.getBookAuthor() + ") " +
                                 "\nLocation: " + book.getCabinetName() + "/" + book.getShelfName());
                     }
-//
                 } else {
                     bookService.findBooksByTitle(title)
                             .forEach(b -> System.out.println(" --- " + b.getBookTitle() + " ("
@@ -106,7 +104,12 @@ public class CLIController {
             }
 
             if (cmd.hasOption("d") && cmd.getOptionValue("d").equalsIgnoreCase("book")) {
-                bookService.deleteBook(cmd.getOptionValue("title"), cmd.getOptionValue("author"));
+                try {
+                    bookService.deleteBook(cmd.getOptionValue("title"), cmd.getOptionValue("author"));
+                }
+                catch (EntityNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             }
 

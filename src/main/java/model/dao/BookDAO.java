@@ -1,6 +1,6 @@
 package model.dao;
 
-import model.DTO.BookLocation;
+import model.dto.BookLocation;
 import model.Database;
 import model.pojo.Book;
 
@@ -124,20 +124,17 @@ public class BookDAO {
         return null;
     }
 
-    public void deleteBookByTitleAndAuthor(String title, String author) {
+    public int deleteBookByTitleAndAuthor(String title, String author) {
         String sql = "DELETE FROM book WHERE title = ? AND author = ?";
         try(Connection connection = Database.connect();
         PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, author);
             int affected = preparedStatement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("Failed to delete book");
-            }
+            return affected;
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("Failed to delete book " + title);
         }
-
     }
 
     public Book findBookByTitleAndAuthor(String title, String author) {

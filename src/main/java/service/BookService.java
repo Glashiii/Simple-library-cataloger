@@ -1,9 +1,11 @@
 package service;
 
+import exceptions.BookNotFoundException;
+import exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import model.DTO.BookLocation;
+import model.dto.BookLocation;
 import model.dao.BookDAO;
 import model.dao.ShelfDAO;
 import model.pojo.Book;
@@ -33,11 +35,14 @@ public class BookService {
     }
 
     public void deleteBook(String title, String author) {
-        if(author == null || author.equals("")) {
-            System.out.println("Please enter author");
-            return;
+//        if (author == null || author.isEmpty()) {
+//            System.out.println("Please enter author");
+//            return;
+//        }
+        int deleted = bookDAO.deleteBookByTitleAndAuthor(title, author);
+        if (deleted == 0) {
+            throw new EntityNotFoundException("Book with title " + title + " and author " + author + " not found");
         }
-        bookDAO.deleteBookByTitleAndAuthor(title, author);
     }
 
     public void updateBookTitle(String oldTitle, String author, String newTitle) {
