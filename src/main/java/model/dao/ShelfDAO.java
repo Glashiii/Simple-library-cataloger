@@ -22,19 +22,17 @@ public class ShelfDAO {
         }
     }
 
-    public void deleteShelfById(int id) {
+    public int deleteShelfById(int id) {
         String sql = "delete from shelf where id = ?";
         try(Connection connection = Database.connect();
             PreparedStatement preparedStatement = connection.prepareStatement(sql))  {
             preparedStatement.setLong(1, id);
             int affected = preparedStatement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("Failed to delete shelf");
-            }
+            return affected;
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to delete shelf with id " + id);
         }
     }
 
@@ -109,17 +107,15 @@ public class ShelfDAO {
         return null;
     }
 
-    public void deleteShelfByName(String name) {
+    public int deleteShelfByName(String name) {
         String sql = "delete from shelf where name = ?";
         try(Connection connection = Database.connect();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, name);
             int affected = preparedStatement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("Failed to delete cabinet");
-            }
+            return affected;
         }catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to delete shelf");
         }
     }
 }

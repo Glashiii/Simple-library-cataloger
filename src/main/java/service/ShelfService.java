@@ -1,5 +1,8 @@
 package service;
 
+import exceptions.EntityAlreadyExists;
+import exceptions.EntityNotFoundException;
+import exceptions.QuantityLimitException;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import model.dao.ShelfDAO;
@@ -15,15 +18,12 @@ public class ShelfService {
     public void addShelf(String name, int cabinetId) {
         List<Shelf> shelves = shelfDAO.findAllShelvesByCabinetId(cabinetId);
         if (shelves.size() == 4){
-            System.out.println("Can't be more than 4 cabinets");
-            return;
+            throw new QuantityLimitException("Can't be more than 4 cabinets");
         }
         if (findShelfByName(name) != null){
-            System.out.println("Shelf already exists");
-            return;
+            throw new EntityAlreadyExists("Shelf with name " + name + " already exists");
         }
         shelfDAO.addShelf(new Shelf(0, name, cabinetId));
-        System.out.println("Added Shelf " + name);
     }
 
     public Shelf findShelfByName(String name) {
@@ -37,13 +37,16 @@ public class ShelfService {
     public void updateShelf(String oldName, String newName) {
         Shelf shelf = shelfDAO.findShelfByName(oldName);
         if (shelf == null) {
-            System.out.println("Shelf not found");
+            throw new EntityNotFoundException("Shelf with name " + oldName + " does not exist");
         }
         shelfDAO.updateShelfByName(oldName, newName);
     }
 
     public void deleteShelf(String name) {
-        shelfDAO.deleteShelfByName(name);
+        int deleted = shelfDAO.deleteShelfByName(name);
+        if (deleted == 0) {
+            throw new EntityNotFoundException("Shelf with name " + name + " not found");
+        }
     }
 
 }

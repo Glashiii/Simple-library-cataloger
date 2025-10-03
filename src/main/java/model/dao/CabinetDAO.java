@@ -79,17 +79,15 @@ public class CabinetDAO {
         return null;
     }
 
-    public void deleteCabinetByName(String name) {
+    public int deleteCabinetByName(String name) {
         String sql = "DELETE FROM cabinet WHERE name = ?";
         try(Connection connection = Database.connect();
         PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, name);
             int affected = preparedStatement.executeUpdate();
-            if (affected == 0) {
-                throw new RuntimeException("Failed to delete cabinet");
-            }
+            return affected;
         }catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to delete cabinet " + name);
         }
     }
 

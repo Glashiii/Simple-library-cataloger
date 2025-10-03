@@ -1,5 +1,8 @@
 package service;
 
+import exceptions.EntityAlreadyExists;
+import exceptions.EntityNotFoundException;
+import exceptions.QuantityLimitException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import model.dao.CabinetDAO;
@@ -15,12 +18,10 @@ public class CabinetService {
     public void addCabinet(String name, int roomId) {
         List<Cabinet> cabinets = cabinetDAO.findAllCabinets();
         if (cabinets.size() == 8) {
-            System.out.println("Can't add more than 8 cabinets");
-            return;
+            throw new QuantityLimitException("Maximum number of rooms is 8");
         }
         if (findCabinetByName(name) != null ) {
-            System.out.println("Cabinet already exists");
-            return;
+            throw new EntityAlreadyExists("Cabinet with name " + name + " already exists");
         }
         cabinetDAO.addCabinet(new Cabinet(0, name, roomId));
         System.out.println("Added Cabinet " + name);
@@ -37,17 +38,16 @@ public class CabinetService {
     public void updateCabinet(String oldName, String newName) {
         Cabinet cabinet = cabinetDAO.findCabinetByName(oldName);
         if (cabinet == null) {
-            System.out.println("Cabinet not found");
+            throw new EntityNotFoundException("Cabinet with name " + oldName + " does not exist");
         }
         cabinetDAO.updateCabinetByName(oldName, newName);
     }
 
     public void deleteCabinet(String name) {
-        try {
-            cabinetDAO.deleteCabinetByName(name);
-        }
-        catch (RuntimeException e) {
-            System.out.println("Cabinet not found");
+        int deleted =  cabinetDAO.deleteCabinetByName(name);
+
+        if (deleted == 0) {
+            throw new EntityNotFoundException("Cabinet with name " + name + " does not exist");
         }
     }
 }
