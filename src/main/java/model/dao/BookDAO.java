@@ -31,7 +31,6 @@ public class BookDAO {
             preparedStatement.setString(1, newTitle);
             preparedStatement.setString(2, title);
             preparedStatement.setString(3, author);
-            // TODO return 1/0 depending on success
             preparedStatement.executeUpdate();
             return newTitle;
 
