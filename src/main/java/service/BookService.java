@@ -1,6 +1,6 @@
 package service;
 
-import exceptions.BookNotFoundException;
+
 import exceptions.EntityAlreadyExists;
 import exceptions.EntityNotFoundException;
 import exceptions.QuantityLimitException;
@@ -26,8 +26,10 @@ public class BookService {
         if (books.size() == 8) {
             throw new QuantityLimitException("Maximum number of books on 1 shelf is 8");
         }
-        if (findBookLocation(title, author) != null) {
-            throw new EntityAlreadyExists("Book with this title and author already exists");
+        try{
+            findBookLocation(title, author);
+            throw new EntityAlreadyExists("Book with title " + title + " and author " + author + " already exists");
+        } catch (EntityNotFoundException ignored){
         }
         Book book = new Book(0, shelfId, title, author);
         bookDAO.addBook(book);
