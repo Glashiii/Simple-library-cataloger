@@ -19,7 +19,7 @@ public class BookDAO {
             preparedStatement.setInt(3, book.getShelfId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Param --title should not be null");
+            throw new RuntimeException(e);
         }
 
     }

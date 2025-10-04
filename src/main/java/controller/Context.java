@@ -19,6 +19,10 @@ public class Context {
         return currentShelfId != null;
     }
 
+    public boolean isAtRoot() {
+        return !isInCabinet() && !isInShelf();
+    }
+
     public void setCabinet(int id) {
         this.currentCabinetId = id;
         this.currentShelfId = null;

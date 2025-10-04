@@ -68,16 +68,22 @@ public class CLIController {
 
             // create book
             if (cmd.hasOption("c") && cmd.getOptionValue("c").equalsIgnoreCase("book")) {
+                if (!context.isInShelf()) {
+                    System.out.println("Can't create book not inside shelf");
+                    return;
+                }
+
                 try {
                     if (context.isInShelf()) {
                         String title = getRequiredOptionValue(cmd, "title");
-                        String author = cmd.getOptionValue("author");
+                        String author = getRequiredOptionValue(cmd, "author");
                         bookService.addBookToShelf(context.getCurrentShelfId(), author, title);
                         System.out.println("Book added to shelf");
+
                     } else {
                         System.out.println("You are not in a shelf");
                     }
-                } catch (EntityAlreadyExists e) {
+                } catch (EntityAlreadyExists | ParseException e) {
                     System.out.println(e.getMessage());
                 }
                 return;
@@ -134,7 +140,12 @@ public class CLIController {
             // Cabinet commands
 
             // create cabinet
+
             if (cmd.hasOption("c") && cmd.getOptionValue("c").equalsIgnoreCase("cabinet")) {
+                if (!context.isAtRoot()) {
+                    System.out.println("Can't create cabinet not in the room");
+                    return;
+                }
                 String name = getRequiredOptionValue(cmd, "name");
                 try {
                     cabinetService.addCabinet(name, mainRoomId);
@@ -170,6 +181,10 @@ public class CLIController {
 
             // shelf commands
             if (cmd.hasOption("c") && cmd.getOptionValue("c").equalsIgnoreCase("shelf")) {
+                if (context.isInCabinet() || context.isInShelf()) {
+                    System.out.println("Can't create cabinet inside shelf");
+                    return;
+                }
                 String name = getRequiredOptionValue(cmd, "name");
                 if (context.isInCabinet()) {
                     try {

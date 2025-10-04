@@ -39,7 +39,7 @@ public class DatabaseInitializator {
                         author TEXT,
                         shelf_id INTEGER NOT NULL,
                         FOREIGN KEY (shelf_id) REFERENCES shelf(id),
-                        UNIQUE (title, shelf_id)
+                        UNIQUE (title, shelf_id, author)
                     )""");
 
             System.out.println("Database initialized");
