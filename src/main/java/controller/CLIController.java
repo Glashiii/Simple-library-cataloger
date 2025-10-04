@@ -181,7 +181,7 @@ public class CLIController {
 
             // shelf commands
             if (cmd.hasOption("c") && cmd.getOptionValue("c").equalsIgnoreCase("shelf")) {
-                if (context.isInCabinet() || context.isInShelf()) {
+                if (context.isInShelf()) {
                     System.out.println("Can't create cabinet inside shelf");
                     return;
                 }

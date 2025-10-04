@@ -28,7 +28,7 @@ public class DatabaseInitializator {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     cabinet_id INTEGER NOT NULL,
-                    FOREIGN KEY (cabinet_id) REFERENCES cupboard(id),
+                    FOREIGN KEY (cabinet_id) REFERENCES cabinet(id),
                     UNIQUE (name, cabinet_id)
                 )""");
 

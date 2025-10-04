@@ -33,8 +33,6 @@ public class CabinetView {
             canvas[y][0] = '|';
             canvas[y][roomWidth - 1] = '|';
         }
-//        canvas[0][0] = canvas[0][roomWidth - 1] = '+';
-//        canvas[roomHeight - 1][0] = canvas[roomHeight - 1][roomWidth - 1] = '+';
 
         try{
             for (int i = 0; i < cabinets.size() && i < 8; i++) {
