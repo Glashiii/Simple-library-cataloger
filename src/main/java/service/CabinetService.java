@@ -15,16 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 public class CabinetService {
     private final CabinetDAO cabinetDAO;
+    private final int MAX_CABINET = 8;
     public void addCabinet(String name, int roomId) {
         List<Cabinet> cabinets = cabinetDAO.findAllCabinets();
-        if (cabinets.size() == 8) {
-            throw new QuantityLimitException("Maximum number of rooms is 8");
+        if (cabinets.size() == MAX_CABINET) {
+            throw new QuantityLimitException("Maximum number of rooms is " + MAX_CABINET + ".");
         }
         if (findCabinetByName(name) != null ) {
             throw new EntityAlreadyExists("Cabinet with name " + name + " already exists");
         }
         cabinetDAO.addCabinet(new Cabinet(0, name, roomId));
-        System.out.println("Added Cabinet " + name);
     }
 
     public Cabinet findCabinetByName(String name) {

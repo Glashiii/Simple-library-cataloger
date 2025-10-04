@@ -20,17 +20,20 @@ import java.util.List;
 public class BookService {
     private final BookDAO bookDAO;
     private final ShelfDAO shelfDAO;
+    private final int MAX_BOOKS = 8;
 
     public void addBookToShelf(int shelfId, String author, String title) {
         List<Book> books = bookDAO.findAllBooksByShelfId(shelfId);
-        if (books.size() == 8) {
-            throw new QuantityLimitException("Maximum number of books on 1 shelf is 8");
+        if (books.size() == MAX_BOOKS) {
+            throw new QuantityLimitException("Maximum number of books on 1 shelf is " + MAX_BOOKS);
         }
         try{
-            findBookLocation(title, author);
-            throw new EntityAlreadyExists("Book with title " + title + " and author " + author + " already exists");
+            findBookLocation(title, author, shelfId);
+            throw new EntityAlreadyExists("Book with title " + title + " and author " + author +
+                    " already exists on this shelf");
         } catch (EntityNotFoundException ignored){
         }
+
         Book book = new Book(0, shelfId, title, author);
         bookDAO.addBook(book);
     }
@@ -50,8 +53,8 @@ public class BookService {
         bookDAO.updateBookByAuthorAndTitle(oldTitle, author, newTitle);
     }
 
-    public BookLocation findBookLocation(String title, String author) {
-        BookLocation book = bookDAO.findByTitleAndAuthorWithLocation(title, author);
+    public BookLocation findBookLocation(String title, String author, int shelfId) {
+        BookLocation book = bookDAO.findByTitleAndAuthorWithLocation(title, author, shelfId);
         if (book == null) {
             throw new EntityNotFoundException("Book with title " + title + " and author " + author + " not found");
         }

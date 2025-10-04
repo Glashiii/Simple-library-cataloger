@@ -99,18 +99,16 @@ public class BookDAO {
         return null;
     }
 
-    public BookLocation findByTitleAndAuthorWithLocation(String title, String author) {
+    public BookLocation findByTitleAndAuthorWithLocation(String title, String author, int shelfId) {
         String sql = """
         select b.title, b.author,
                s.name as shelf_name,
-               c.name as cabinet_name,
-               r.name as room_name
+               c.name as cabinet_name
         from book b
         join shelf s   on b.shelf_id = s.id
         join cabinet c on s.cabinet_id = c.id
-        join room r    on c.room_id = r.id
-        where b.title like ? and b.author like ?
-        ORDER BY r.name, c.name, s.name
+        where b.title like ? and b.author like ? and b.shelf_id = ?
+        ORDER BY c.name, s.name
         """;
 
         try (Connection conn = Database.connect();
@@ -118,6 +116,7 @@ public class BookDAO {
 
             stmt.setString(1, title);
             stmt.setString(2, author);
+            stmt.setInt(3,shelfId);
             ResultSet rs = stmt.executeQuery();
 
            if (rs.next()) {
@@ -125,8 +124,7 @@ public class BookDAO {
                         rs.getString("title"),
                         rs.getString("author"),
                         rs.getString("shelf_name"),
-                        rs.getString("cabinet_name"),
-                        rs.getString("room_name")
+                        rs.getString("cabinet_name")
                 ));
             }
         } catch (SQLException e) {
@@ -163,8 +161,7 @@ public class BookDAO {
                         rs.getString("title"),
                         rs.getString("author"),
                         rs.getString("shelf_name"),
-                        rs.getString("cabinet_name"),
-                        rs.getString("room_name")
+                        rs.getString("cabinet_name")
                 ));
             }
         } catch (SQLException e) {

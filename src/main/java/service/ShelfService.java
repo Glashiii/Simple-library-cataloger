@@ -4,6 +4,7 @@ import exceptions.EntityAlreadyExists;
 import exceptions.EntityNotFoundException;
 import exceptions.QuantityLimitException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import model.dao.ShelfDAO;
 import model.pojo.Shelf;
@@ -14,11 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ShelfService {
     private final ShelfDAO shelfDAO;
+    private final int MAX_CABINETS = 4;
 
     public void addShelf(String name, int cabinetId) {
         List<Shelf> shelves = shelfDAO.findAllShelvesByCabinetId(cabinetId);
         if (shelves.size() == 4){
-            throw new QuantityLimitException("Can't be more than 4 cabinets");
+            throw new QuantityLimitException("Can't be more than " + MAX_CABINETS + " cabinets");
         }
         if (findShelfByName(name) != null){
             throw new EntityAlreadyExists("Shelf with name " + name + " already exists");

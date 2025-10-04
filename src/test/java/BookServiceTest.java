@@ -66,8 +66,9 @@ public class BookServiceTest {
         String title = "new title";
         String author = "new author";
 
+
         when(bookDaoMock.findAllBooksByShelfId(shelfId)).thenReturn(Collections.emptyList());
-        when(bookDaoMock.findByTitleAndAuthorWithLocation(title, author)).thenReturn(null);
+        when(bookDaoMock.findByTitleAndAuthorWithLocation(title, author, shelfId)).thenReturn(null);
 
         assertDoesNotThrow(() -> {
             bookService.addBookToShelf(shelfId, author, title);
@@ -85,7 +86,7 @@ public class BookServiceTest {
 
         when(bookDaoMock.findAllBooksByShelfId(shelfId)).thenReturn(Collections.emptyList());
 
-        when(bookDaoMock.findByTitleAndAuthorWithLocation(title, author)).thenReturn(new BookLocation());
+        when(bookDaoMock.findByTitleAndAuthorWithLocation(title, author, shelfId)).thenReturn(new BookLocation());
 
         assertThrows(EntityAlreadyExists.class, () -> {
             bookService.addBookToShelf(shelfId, author, title);
@@ -107,7 +108,7 @@ public class BookServiceTest {
             bookService.addBookToShelf(shelfId, "author", "title");
         });
 
-        verify(bookDaoMock, never()).findByTitleAndAuthorWithLocation(any(), any());
+        verify(bookDaoMock, never()).findByTitleAndAuthorWithLocation(any(), any(), eq(shelfId));
         verify(bookDaoMock, never()).addBook(any());
     }
 

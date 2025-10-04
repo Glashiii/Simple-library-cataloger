@@ -94,7 +94,7 @@ public class CLIController {
                 String author = cmd.getOptionValue("author");
                 if (author != null && !author.isBlank()) {
                     try {
-                        BookLocation book = bookService.findBookLocation(title, author);
+                        BookLocation book = bookService.findBookLocation(title, author, context.getCurrentShelfId());
                         System.out.println("Found book: " + book.getBookTitle() + " (" + book.getBookAuthor() + ") " +
                                 "\nLocation: " + book.getCabinetName() + "/" + book.getShelfName());
                     } catch (EntityNotFoundException e) {

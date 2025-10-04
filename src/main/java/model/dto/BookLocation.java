@@ -12,5 +12,4 @@ public class BookLocation {
     private String bookAuthor;
     private String shelfName;
     private String cabinetName;
-    private String roomName;
 }
